@@ -29,7 +29,7 @@ class Layer:
         
     def compute_activations(self, prev_activations):
         unbiased = np.matmul(self.weights, prev_activations)
-        activation_inputs = np.subtract(unbiased, self.biases)
+        activation_inputs = np.add(unbiased, self.biases)
         return self.vec_activation_func(activation_inputs)
 
 
@@ -52,13 +52,18 @@ expected = np.array([0,3,0,5])
 actual = np.array([2,3,1,3])
 print(vec_cost(actual, expected))
 
+def desired_output(label):
+    pass
+
 # compute the cost function on all of data and average
-def cost_on_data(network: Network, data):
+def cost_on_data(network: Network, data, labels):
     total_cost = 0
-    for point in data:
-        total_cost += network.compute_result(point)
-    avg_cost = total_cost / len(data)
-    return avg_cost
+    for point, label in data, labels:
+        x = network.compute_result(point)
+        y = desired_output(label)
+        total_cost += vec_cost(y, x)
+    quadratic_cost = total_cost / (2 * len(data))
+    return quadratic_cost
 
 # TODO: decoding data
 # TODO: evolution
